@@ -1,0 +1,4 @@
+PHP API reference is available at http://www.clusterpoint.com/apidoc/php/
+You can also try the CPS Wiki:
+http://docs.clusterpoint.com/wiki/PHP_API_overview is a good starting point.
+A simple search example can be found in ./search_example.php

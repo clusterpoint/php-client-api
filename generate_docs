@@ -1,0 +1,3 @@
+#!/bin/bash
+phpdoc -ue -t doc -f command_classes.php,connection.class.php,cps_api.php,cps_simple.php,exception.class.php,request.class.php,response.class.php \
+--title "CPS v2 PHP API Reference" -o HTML:Smarty/Evolve:default
