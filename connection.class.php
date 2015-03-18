@@ -145,7 +145,8 @@ class CPS_Connection
     } while (!$quit);
     switch ($request->getCommand()) {
       case 'search':
-        return new CPS_SearchResponse($this, $request, $rawResponse, $this->_noCdata);
+        $ret = new CPS_SearchResponse($this, $request, $rawResponse, $this->_noCdata);
+        break;
       case 'update':
       case 'delete':
       case 'replace':
@@ -155,13 +156,17 @@ class CPS_Connection
       case 'create-alert':
       case 'update-alerts':
       case 'delete-alerts':
-        return new CPS_ModifyResponse($this, $request, $rawResponse, $this->_noCdata);
+        $ret = new CPS_ModifyResponse($this, $request, $rawResponse, $this->_noCdata);
+        break;
       case 'alternatives':
-        return new CPS_AlternativesResponse($this, $request, $rawResponse, $this->_noCdata);
+        $ret = new CPS_AlternativesResponse($this, $request, $rawResponse, $this->_noCdata);
+        break;
       case 'list-words':
-        return new CPS_ListWordsResponse($this, $request, $rawResponse, $this->_noCdata);
+        $ret = new CPS_ListWordsResponse($this, $request, $rawResponse, $this->_noCdata);
+        break;
       case 'status':
-        return new CPS_StatusResponse($this, $request, $rawResponse, $this->_noCdata);
+        $ret = new CPS_StatusResponse($this, $request, $rawResponse, $this->_noCdata);
+        break;
       case 'retrieve':
       case 'list-last':
       case 'list-first':
@@ -170,18 +175,27 @@ class CPS_Connection
       case 'lookup':
       case 'similar':
       case 'show-history':
-        return new CPS_LookupResponse($this, $request, $rawResponse, $this->_noCdata);
+        $ret = new CPS_LookupResponse($this, $request, $rawResponse, $this->_noCdata);
+        break;
       case 'search-delete':
-        return new CPS_SearchDeleteResponse($this, $request, $rawResponse, $this->_noCdata);
+        $ret = new CPS_SearchDeleteResponse($this, $request, $rawResponse, $this->_noCdata);
+        break;
       case 'list-paths':
-        return new CPS_ListPathsResponse($this, $request, $rawResponse, $this->_noCdata);
+        $ret = new CPS_ListPathsResponse($this, $request, $rawResponse, $this->_noCdata);
+        break;
       case 'list-facets':
-        return new CPS_ListFacetsResponse($this, $request, $rawResponse, $this->_noCdata);
+        $ret = new CPS_ListFacetsResponse($this, $request, $rawResponse, $this->_noCdata);
+        break;
       case 'list-alerts':
-        return new CPS_ListAlertsResponse($this, $request, $rawResponse, $this->_noCdata);
+        $ret = new CPS_ListAlertsResponse($this, $request, $rawResponse, $this->_noCdata);
+        break;
       default:
-        return new CPS_Response($this, $request, $rawResponse, $this->_noCdata);
+        $ret = new CPS_Response($this, $request, $rawResponse, $this->_noCdata);
     }
+    if (isset($this->_connectionSwitcher) && $this->_transactionId) {
+      $this->_connectionSwitcher->logSuccess();
+  }
+    return $ret;
   }
 
   /**
@@ -648,7 +662,7 @@ class CPS_LoadBalancer
   /**
    * This function is called whenever there was a sending success - no error received and no exception raised
    */
-  private function logSuccess()
+  public function logSuccess()
   {
     $this->_lastSuccess = true;
     if ($this->_debug) {
