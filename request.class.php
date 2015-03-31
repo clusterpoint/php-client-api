@@ -105,7 +105,7 @@ class CPS_Request {
     }
 
 	public function getTextParamNames(){
-		return $this->_rawParamNames + $this->_textParamNames;
+		return array_merge($this->_rawParamNames, $this->_textParamNames);
 	}
 
     /**
