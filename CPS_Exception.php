@@ -1,4 +1,6 @@
 <?php
+namespace cps;
+use \Exception AS Exception;
 /**
 * Exception class for CPS API
 * @package CPS

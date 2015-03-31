@@ -4,16 +4,16 @@
 * @package CPS
 */
 
-//define('USE_OLD_LIB_SOCK', true);
-
 /**
 * Including all classes
 */
 
-require_once(dirname(__FILE__) . '/exception.class.php');
-require_once(dirname(__FILE__) . '/connection.class.php');
-require_once(dirname(__FILE__) . '/request.class.php');
-require_once(dirname(__FILE__) . '/response.class.php');
-require_once(dirname(__FILE__) . '/command_classes.php');
+
+require_once(dirname(__FILE__) . '/CPS_Exception.php');
+require_once(dirname(__FILE__) . '/CPS_LoadBalancer.php');
+require_once(dirname(__FILE__) . '/CPS_Request.php');
+require_once(dirname(__FILE__) . '/CPS_Response.php');
+require_once(dirname(__FILE__) . '/CPS_StaticRequest.php');
+require_once(dirname(__FILE__) . '/CPS_Connection.php');
 
 ?>

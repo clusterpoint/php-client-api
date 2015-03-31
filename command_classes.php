@@ -1,15 +1,11 @@
 <?php
+namespace cps;
+use \Iterator AS Iterator;
+
 /**
  * Request and response classes for all commands in the CPS API
  * @package CPS
  */
-
-/**
- * request/response includes
- */
-
-require_once dirname(__FILE__) . '/request.class.php';
-require_once dirname(__FILE__) . '/response.class.php';
 
 /**
  * Escapes <, > and & characters in the given term for inclusion into XML (like the search query). Also wraps the term in XML tags if xpath is specified.

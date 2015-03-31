@@ -3,7 +3,7 @@ if (defined('USE_OLD_LIB_SOCK'))
 	require_once("lib_sock_old.inc.php");
 else
 	require_once("lib_sock.inc.php");
-require_once(dirname(__FILE__) . '/../exception.class.php');
+require_once(dirname(__FILE__) . '/../CPS_Exception.php');
 
 function cps_http_get($url, $headers = "")
 {
