@@ -12,6 +12,7 @@ try {
   $insertDocs = array();
   $insertDocs['id1'] = array(
     'category' => 'cars',
+    'name' => 'Janis',
     'car_params' => array(
       'year' => '2011',
       'make' => 'Audi',
@@ -26,6 +27,7 @@ try {
   );
   $insertDocs['id2'] = array(
     'category' => 'cars',
+    'name' => 'Karlis',
     'car_params' => array(
       'year' => '2009',
       'make' => 'Audi',
@@ -39,7 +41,8 @@ try {
     )
   );
   $insertDocs['id3'] = array(
-    'category' => 'cars',
+    'category' => 'mopeds',
+    'name' => 'Aigars',
     'car_params' => array(
       'year' => '2012',
       'make' => 'Audi',
@@ -54,6 +57,7 @@ try {
   );
   $insertDocs['id4'] = array(
     'category' => 'cars',
+    'name' => 'Janis',
     'car_params' => array(
       'year' => '2010',
       'make' => 'Audi',
@@ -68,6 +72,7 @@ try {
   );
   $insertDocs['id5'] = array(
     'category' => 'mopeds',
+    'name' => 'Janis',
     'car_params' => array(
       'year' => '2011',
       'make' => 'Audi',
@@ -82,6 +87,7 @@ try {
   );
   $insertDocs['id6'] = array(
     'category' => 'mopeds',
+    'name' => 'Janis',
     'persons' => array(
       'year' => '2011',
       'make' => 'Audi',

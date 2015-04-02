@@ -8,7 +8,7 @@ try {
   // creating a CPS_Connection instance
   $cpsConnection = new cps\CPS_Connection($config['connection'], $config['database'], $config['username'], $config['password'],
     'document', '//document/id', array('account' => $config['account']));
-  $cpsConnection->setDebug(1);
+
   // Deleting one
   $deleteRequest = new cps\CPS_DeleteRequest('id1');
   $cpsConnection->sendRequest($deleteRequest);
