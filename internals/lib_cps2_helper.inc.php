@@ -1,5 +1,7 @@
 <?php
 
+namespace cps;
+
 if (defined('USE_OLD_LIB_SOCK'))
   require_once("lib_sock_old.inc.php");
 else

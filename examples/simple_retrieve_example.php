@@ -9,17 +9,18 @@ try {
   $cpsConnection = new cps\CPS_Connection($config['connection'], $config['database'], $config['username'], $config['password'],
     'document', '//document/id', array('account' => $config['account']));
 
-  // setting HMAC keys, comment out is and standard username/password will be used
-  $cpsConnection->setHMACKeys("USERKEY", "SIGNKEY");
-
-  // uncomment this, if you would like to see request/response and verify, that username and password is not set
-  //$cpsConnection->setDebug(true);
-
-  // perform status command
+  // creating a CPS_Simple instance
   $cpsSimple = new cps\CPS_Simple($cpsConnection);
-  echo "Status response:\n";
-  var_dump($cpsSimple->status());
 
+  // retrieving one document
+  $document = $cpsSimple->retrieveSingle('id1');
+  echo $document->name . '<br />';
+
+  // retrieving multiple documents - listing only the name
+  $documents = $cpsSimple->retrieveMultiple(array('id2', 'id3'));
+  foreach ($documents as $id => $document) {
+    echo $document->name . '<br />';
+  }
 } catch (cps\CPS_Exception $e) {
   var_dump($e->errors());
   exit;

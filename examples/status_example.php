@@ -8,16 +8,18 @@ try {
   // creating a CPS_Connection instance
   $cpsConnection = new cps\CPS_Connection($config['connection'], $config['database'], $config['username'], $config['password'],
     'document', '//document/id', array('account' => $config['account']));
-  $cpsConnection->setDebug(1);
-  // Deleting one
-  $deleteRequest = new cps\CPS_DeleteRequest('id1');
-  $cpsConnection->sendRequest($deleteRequest);
 
-  // Deleting multiple
-  $deleteRequest = new cps\CPS_DeleteRequest(array('id2', 'id3'));
-  $cpsConnection->sendRequest($deleteRequest);
+  // Retrieving status information
+  $statusRequest = new cps\CPS_StatusRequest();
+  $statusResponse = $cpsConnection->sendRequest($statusRequest);
+  $status = $statusResponse->getStatus();
+
+  foreach ($status['shard'] as $shard)
+    foreach ($shard['replica'] as $replica)
+      echo 'Status ' . $replica['status']['index']['status'] . ' <br>';
 } catch (cps\CPS_Exception $e) {
   var_dump($e->errors());
   exit;
 }
 ?>
+

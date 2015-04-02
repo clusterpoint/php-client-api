@@ -1,5 +1,8 @@
 <?php
 namespace cps;
+
+require_once(dirname(__FILE__) . '/CPS_SQLSearchRequest.php');
+
   /**
    * CPS Simple API
    * @package CPS
@@ -33,7 +36,7 @@ class CPS_Simple
    * @param int $offset Defines the number of documents to skip before including them in the results
    * @param int $docs Maximum document count to retrieve
    * @param array $list Listing parameter - an associative array with tag xpaths as keys and listing options (yes | no | snippet | highlight) as values
-   * @param string|array $ordering Defines the order in which results will be returned. Contains either a single sorting string or an array of those. Could be conveniently generated with ordering macros, e.g. $q->setOrdering(array(CPS_NumericOrdering('user_count', 'desc'), CPS_RelevanceOrdering())) will sort the documents in descending order according to the user_count, and if user_count is equal will sort them by relevance.
+   * @param string|array $ordering Defines the order in which results will be returned. Contains either a single sorting string or an array of those. Could be conveniently generated with ordering macros, e.g. $q->setOrdering(array(CPS::NumericOrdering('user_count', 'desc'), CPS::RelevanceOrdering())) will sort the documents in descending order according to the user_count, and if user_count is equal will sort them by relevance.
    * @param int $returnType defines which datatype the returned documents will be in. Default is DOC_TYPE_SIMPLEXML, other possible values are DOC_TYPE_ARRAY and DOC_TYPE_STDCLASS
    * @return array
    */
@@ -351,7 +354,7 @@ class CPS_Simple
         $original = substr($original, $pos + 1);
       }
       if (!is_null($prevxpath) && ($xpath != $prevxpath)) {
-        $res .= CPS_Term($xp_accum, $prevxpath);
+        $res .= CPS::Term($xp_accum, $prevxpath);
         $xp_accum = '';
       }
       $prevxpath = $xpath;
@@ -365,7 +368,7 @@ class CPS_Simple
       }
     }
     if (strlen($xp_accum) > 0) {
-      $res .= ($res == '' ? '' : ' ') . CPS_Term($xp_accum, is_null($prevxpath) ? '' : $prevxpath);
+      $res .= ($res == '' ? '' : ' ') . CPS::Term($xp_accum, is_null($prevxpath) ? '' : $prevxpath);
     }
     return $res;
   }

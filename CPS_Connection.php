@@ -1,14 +1,17 @@
 <?php
 namespace cps;
-  /**
-   * Connection class for CPS API
-   * @package CPS
-   */
+
+use \Iterator AS Iterator;
+use \DOMDocument AS DOMDocument;
+
+/**
+ * Connection class for CPS API
+ * @package CPS
+ */
 
 /**
  * Including internals
  */
-require_once dirname(__FILE__) . '/command_classes.php';
 require_once dirname(__FILE__) . '/internals/lib_cps2_helper.inc.php';
 require_once dirname(__FILE__) . '/internals/lib_http.inc.php';
 
@@ -531,4 +534,408 @@ class CPS_Connection
   private $_sslCustomCN;
 
   /**#@-*/
+}
+
+//-------------
+//
+// Response classes
+//
+//------------
+
+
+/**
+ * The CPS_SearchResponse class is a wrapper for the Response class
+ * @package CPS
+ * @see CPS_SearchRequest
+ */
+class CPS_SearchResponse extends CPS_Response
+{
+  /**
+   * Returns the documents from the response as an associative array, where keys are document IDs and values area document contents
+   * @param int $type defines which datatype the returned documents will be in. Default is DOC_TYPE_SIMPLEXML, other possible values are DOC_TYPE_ARRAY and DOC_TYPE_STDCLASS
+   * @return array
+   */
+  public function getDocuments($type = DOC_TYPE_SIMPLEXML)
+  {
+    if (isset($this->_simpleXml->cursor_id)) return $this->getCursor($type);
+    return parent::getRawDocuments($type);
+  }
+
+  /**
+   * Returns the facets from the response in a form of a multi-dimensional associative array, e.g. array('category' => array('Sports' => 15, 'News' => 20));
+   * @return array
+   */
+  public function getFacets()
+  {
+    return parent::getRawFacets();
+  }
+
+  /**
+   * Returns aggregated data from the response as an associative array with queries as keys and results as values
+   * @param int $returnType defines which datatype the returned documents will be in. Default is DOC_TYPE_ARRAY, other possible values are DOC_TYPE_SIMPLEXML and DOC_TYPE_STDCLASS
+   * @return array
+   */
+  public function getAggregate($returnType = DOC_TYPE_SIMPLEXML)
+  {
+    return parent::getRawAggregate($returnType);
+  }
+
+  /**
+   * Returns the number of documents returned
+   * @return int
+   */
+  public function getFound()
+  {
+    return $this->getParam('found');
+  }
+
+  /**
+   * Returns the total number of hits - i.e. the number of documents in a storage that match the request
+   * @return int
+   */
+  public function getHits()
+  {
+    return $this->getParam('hits');
+  }
+
+  /**
+   * Returns the position of the first document that was returned
+   * @return int
+   * @see CPS_SearchRequest::setOffset(), CPS_SearchRequest::setDocs()
+   */
+  public function getFrom()
+  {
+    return $this->getParam('from');
+  }
+
+  /**
+   * Returns the position of the last document that was returned
+   * @see CPS_SearchRequest::setOffset(), CPS_SearchRequest::setDocs()
+   * @return int
+   */
+  public function getTo()
+  {
+    return $this->getParam('to');
+  }
+
+  public function getCursor($type = DOC_TYPE_SIMPLEXML)
+  {
+    return new CPS_Cursor($this->_connection, $this->getParam('cursor_id'), $this->getParam('cursor_data'), $this->_documents, $type);
+  }
+}
+
+class CPS_Cursor implements Iterator
+{
+  public function __construct($connection, $cursor_id, $cursor_data, $data, $type = DOC_TYPE_SIMPLEXML, $batch_size = 10)
+  {
+    $this->_connection = $connection;
+    $this->_cursor_id = $cursor_id;
+    $this->_cursor_data = $cursor_data;
+    $this->_data = $data;
+    $this->_type = $type;
+    $this->_batch_size = $batch_size;
+  }
+
+  public function current()
+  {
+    if ($this->type == DOC_TYPE_ARRAY) {
+      return CPS_Response::simpleXmlToArray(current($this->_data));
+    } else if ($this->type == DOC_TYPE_STDCLASS) {
+      return CPS_Response::simpleXmlToStdClass(current($this->_data));
+    } else {
+      return current($this->_data);
+    }
+  }
+
+  public function key()
+  {
+    return key($this->_data);
+  }
+
+  public function next()
+  {
+    if (next($this->_data) === FALSE) {
+      // Try to request new data
+      $req = new CPS_Request('cursor-next-batch');
+      $req->setParam('cursor_id', $this->_cursor_id);
+      $req->setParam('cursor_data', $this->_cursor_data);
+      $req->setParam('docs', $this->_batch_size);
+      $resp = $this->_connection->sendRequest($req);
+
+      $this->_cursor_id = $resp->getParam('cursor_id');
+      $this->_cursor_data = $resp->getParam('cursor_data');
+      $this->_data = $resp->getRawDocuments(DOC_TYPE_SIMPLEXML);
+    }
+  }
+
+  public function rewind()
+  {
+    //TODO: Rewind iterator completely??
+    reset($this->_data);
+  }
+
+  public function valid()
+  {
+    return current($this->_data) !== FALSE;
+  }
+
+  private $_connection;
+  private $_cursor_id;
+  private $_cursor_data;
+  private $_data;
+}
+
+/**#@+
+ * @access private
+ */
+
+/**
+ * The CPS_ModifyResponse class is a wrapper for the Response class for insert, update, delete, replace and partial-replace commands
+ * @package CPS
+ * @see CPS_InsertRequest, CPS_UpdateRequest, CPS_DeleteRequest, CPS_ReplaceRequest, CPS_PartialReplaceRequest
+ */
+class CPS_ModifyResponse extends CPS_Response
+{
+  /**
+   * Returns an array of IDs of documents that have been successfully modified
+   * @return array
+   */
+  public function getModifiedIds()
+  {
+    return array_keys(parent::getRawDocuments(NULL));
+  }
+}
+
+/**
+ * The CPS_AlternativesResponse class is a wrapper for the Response class for the alternatives command
+ * @package CPS
+ * @see CPS_AlternativesRequest
+ */
+class CPS_AlternativesResponse extends CPS_Response
+{
+  /**
+   * Gets the spelling alternatives to the specified query terms
+   *
+   * Returns an associative array, where keys are query terms and values are associative arrays
+   * with alternative spellings as keys and arrays of the metrics of these spellings as values
+   * @return array
+   */
+  public function getWords()
+  {
+    return parent::getRawWords();
+  }
+
+  /**
+   * Gets the occurence count of a particular word from the original query
+   *
+   * @param string $word
+   * @return int
+   */
+  public function getWordCount($word)
+  {
+    if (is_null($this->_localWords)) {
+      $this->_localWords = $this->getRawWordCounts();
+    }
+    return isset($this->_localWords[$word]) ? $this->_localWords[$word] : 0;
+  }
+
+  private $_localWords;
+}
+
+/**
+ * The CPS_ListWordsResponse class is a wrapper for the Response class for the list-words command
+ * @package CPS
+ * @see CPS_ListWordsRequest
+ */
+class CPS_ListWordsResponse extends CPS_Response
+{
+  /**
+   * Returns words matching the given wildcard
+   *
+   * Returns an associative array, where keys are given wildcards and values are associative arrays with matching words as keys and
+   * their counts as values
+   * @return array
+   */
+  public function getWords()
+  {
+    return parent::getRawWords();
+  }
+}
+
+/**
+ * The CPS_StatusResponse class is a wrapper for the Response class for the status command
+ * @package CPS
+ * @see CPS_StatusRequest
+ */
+class CPS_StatusResponse extends CPS_Response
+{
+  /**
+   * Returns an associative array, which contains the status information
+   * @param int $type defines which datatype the returned documents will be in. Default is DOC_TYPE_ARRAY, other possible values are DOC_TYPE_ARRAY and DOC_TYPE_STDCLASS
+   * @return array
+   */
+  public function getStatus($type = DOC_TYPE_ARRAY)
+  {
+    return parent::getContentArray($type);
+  }
+}
+
+/**
+ * The CPS_LookupResponse class is a wrapper for the Response class for replies to retrieve, list-last, list-first, retrieve-last, and retrieve-first commands
+ * @package CPS
+ * @see CPS_RetrieveRequest, CPS_ListLastRequest, CPS_ListFirstRequest, CPS_RetrieveLastRequest, CPS_RetrieveFirstRequest
+ */
+class CPS_LookupResponse extends CPS_Response
+{
+  /**
+   * Returns the documents from the response as an associative array, where keys are document IDs and values area document contents
+   * @param int $type defines which datatype the returned documents will be in. Default is DOC_TYPE_SIMPLEXML, other possible values are DOC_TYPE_ARRAY and DOC_TYPE_STDCLASS
+   * @return array
+   */
+  public function getDocuments($type = DOC_TYPE_SIMPLEXML)
+  {
+    return parent::getRawDocuments($type);
+  }
+
+  /**
+   * Returns the number of documents returned
+   * @return int
+   */
+  public function getFound()
+  {
+    return $this->getParam('found');
+  }
+
+  /**
+   * Returns the position of the first document that was returned
+   * @return int
+   * @see CPS_SearchRequest::setOffset(), CPS_SearchRequest::setDocs()
+   */
+  public function getFrom()
+  {
+    return $this->getParam('from');
+  }
+
+  /**
+   * Returns the position of the last document that was returned
+   * @see CPS_SearchRequest::setOffset(), CPS_SearchRequest::setDocs()
+   * @return int
+   */
+  public function getTo()
+  {
+    return $this->getParam('to');
+  }
+}
+
+/**
+ * The CPS_SearchDeleteResponse class is a wrapper for the Response class
+ * @package CPS
+ * @see CPS_SearchDeleteRequest
+ */
+class CPS_SearchDeleteResponse extends CPS_Response
+{
+  /**
+   * Returns the total number of hits - i.e. the number of documents erased
+   * @return int
+   */
+  public function getHits()
+  {
+    return $this->getParam('hits');
+  }
+}
+
+/**
+ * The CPS_ListPathsResponse class is a wrapper for the Response class for the list-paths command
+ * @package CPS
+ * @see CPS_ListPathsRequest
+ */
+class CPS_ListPathsResponse extends CPS_Response
+{
+  /**
+   * Returns an array of paths
+   * @return array
+   */
+  public function getPaths()
+  {
+    $content = parent::getContentArray();
+    if (isset($content['paths']['path'])) {
+      return $content['paths']['path'];
+    } else {
+      return array();
+    }
+  }
+}
+
+/**
+ * The CPS_ListFacetsResponse class is a wrapper for the Response class for the list-facets command
+ * @package CPS
+ * @see CPS_ListFacetsRequest
+ */
+class CPS_ListFacetsResponse extends CPS_Response
+{
+
+  /**
+   * Returns the facets from the response in a form of a multi-dimensional associative array, e.g. array('category' => array('Sports' => '', 'News' => ''));
+   * @return array
+   */
+  public function getFacets()
+  {
+    return parent::getRawFacets();
+  }
+}
+
+/**
+ * The CPS_ListAlertsResponse class is a wrapper for the Response class for the list-alerts command
+ * @package CPS
+ * @see CPS_ListAlertsRequest
+ */
+class CPS_ListAlertsResponse extends CPS_Response
+{
+  /**
+   * Returns the alerts from the response in a form of a multi-dimensional associative array, in format:
+   * array('alert-id' => array('id' => ..,
+   *              'query' => ..,
+   *              'action' = array('type' => .., ..)));
+   * @return array
+   */
+  public function getAlerts()
+  {
+    if (count($this->_alerts) > 0) return $this->_alerts;
+    if (!isset($this->_contentArray['alerts']) || !isset($this->_contentArray['alerts']['alert'])) return array();
+    if (isset($this->_contentArray['alerts']['alert']['id'])) {
+      $this->_alerts[$this->_contentArray['alerts']['alert']['id']] = $this->_contentArray['alerts']['alert'];
+    } else {
+      foreach ($this->_contentArray['alerts']['alert'] as $alert) {
+        $this->_alerts[$alert['id']] = $alert;
+      }
+    }
+    return $this->_alerts;
+  }
+
+  private $_alerts = array();
+}
+
+/**
+ * CPS_EmptyResponse is used in cases where no reply from the server is expected
+ * @package CPS
+ */
+class CPS_EmptyResponse extends CPS_Response
+{
+  /**
+   * Empty response - used in cases where no reply from the server is expected
+   * @param CPS_Connection &$connection CPS connection object
+   * @param CPS_Request &$request The original request that the response is to
+   */
+  public function __construct(CPS_Connection &$connection, CPS_Request &$request)
+  {
+    $this->_errors = array();
+    $errors = array();
+    $this->_documents = array();
+    $this->_facets = array();
+    $this->_textParams = array();
+    $this->_words = array();
+    $this->_contentArray = array();
+    $this->_paths = array();
+    $this->_textParams = array();
+  }
 }

@@ -16,6 +16,12 @@ try {
       'year' => '2011',
       'make' => 'Audi',
       'model' => 'A6'
+    ),
+    'persons' => array(
+      'person' => array(
+        'name' => 'Janis',
+        'surname' => 'Karklins',
+      )
     )
   );
   $insertDocs['id2'] = array(
@@ -24,6 +30,12 @@ try {
       'year' => '2009',
       'make' => 'Audi',
       'model' => 'A6'
+    ),
+    'persons' => array(
+      'person' => array(
+        'name' => 'Janis',
+        'surname' => 'Karklins',
+      )
     )
   );
   $insertDocs['id3'] = array(
@@ -32,6 +44,12 @@ try {
       'year' => '2012',
       'make' => 'Audi',
       'model' => 'A4'
+    ),
+    'persons' => array(
+      'person' => array(
+        'name' => 'Janis',
+        'surname' => 'Karklins',
+      )
     )
   );
   $insertDocs['id4'] = array(
@@ -40,6 +58,12 @@ try {
       'year' => '2010',
       'make' => 'Audi',
       'model' => 'A5'
+    ),
+    'persons' => array(
+      'person' => array(
+        'name' => 'Janis',
+        'surname' => 'Karklins',
+      )
     )
   );
   $insertDocs['id5'] = array(
@@ -48,6 +72,26 @@ try {
       'year' => '2011',
       'make' => 'Audi',
       'model' => 'A6'
+    ),
+    'persons' => array(
+      'person' => array(
+        'name' => 'Janis',
+        'surname' => 'Karklins',
+      )
+    )
+  );
+  $insertDocs['id6'] = array(
+    'category' => 'mopeds',
+    'persons' => array(
+      'year' => '2011',
+      'make' => 'Audi',
+      'model' => 'A6'
+    ),
+    'persons' => array(
+      'person' => array(
+        'name' => 'Janis',
+        'surname' => 'Karklins',
+      )
     )
   );
 

@@ -8,14 +8,13 @@ try {
   // creating a CPS_Connection instance
   $cpsConnection = new cps\CPS_Connection($config['connection'], $config['database'], $config['username'], $config['password'],
     'document', '//document/id', array('account' => $config['account']));
-  $cpsConnection->setDebug(1);
-  // Deleting one
-  $deleteRequest = new cps\CPS_DeleteRequest('id1');
-  $cpsConnection->sendRequest($deleteRequest);
 
-  // Deleting multiple
-  $deleteRequest = new cps\CPS_DeleteRequest(array('id2', 'id3'));
-  $cpsConnection->sendRequest($deleteRequest);
+  // retrieve 10 last documents
+  $listLastRequest = new cps\CPS_RetrieveFirstRequest(0, 10);
+  $listLastResponse = $cpsConnection->sendRequest($listLastRequest);
+  foreach ($listLastResponse->getDocuments() as $id => $document) {
+    echo $document->name . '<br />';
+  }
 } catch (cps\CPS_Exception $e) {
   var_dump($e->errors());
   exit;

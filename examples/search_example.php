@@ -1,7 +1,7 @@
 <?php
 
 // includes
-require_once('config.php');
+include_once('config.php');
 require_once('../cps_api.php');
 
 try {
@@ -11,7 +11,7 @@ try {
 
   // Setting parameters
   // search for items with category == 'cars' and car_params/year >= 2010
-  $query = cps\CPS_Term('cars', 'category') . cps\CPS_Term('>=2010', 'car_params/year');
+  $query = cps\CPS::Term('cars', 'category') . cps\CPS::Term('>=2010', 'car_params/year');
   // return documents starting with the first one - offset 0
   $offset = 0;
   // return not more than 5 documents
@@ -24,7 +24,7 @@ try {
     'car_params/year' => 'yes'
   );
   // order by year, from largest to smallest
-  $ordering = cps\CPS_NumericOrdering('car_params/year', 'descending');
+  $ordering = cps\CPS::NumericOrdering('car_params/year', 'descending');
 
   // Searching for documents
   // note that only the query parameter is mandatory - the rest are optional

@@ -1,11 +1,15 @@
 <?php
+
 // includes
-require_once 'cps_simple.php';
+require_once('config.php');
+require_once('../cps_simple.php');
 
 try {
   // creating a CPS_Connection instance
-  $cpsConnection = new CPS_Connection(ENDPOINT, STORAGE, USERNAME, PASSWORD, "document", "//document/id", array("account" => ACCOUNTID));
-  $cpsSimple = new CPS_Simple($cpsConnection);
+  $cpsConnection = new cps\CPS_Connection($config['connection'], $config['database'], $config['username'], $config['password'],
+    'document', '//document/id', array('account' => $config['account']));
+
+  $cpsSimple = new cps\CPS_Simple($cpsConnection);
   
   // Insert 2 documents with balance
   $cpsSimple->updateMultiple(array(
@@ -31,7 +35,7 @@ try {
   $cpsSimple->commitTransaction();
   $docs = $cpsSimple->retrieveMultiple(array("1", "2"), DOC_TYPE_ARRAY);
   echo "After commit:\n"; var_dump($docs);
-} catch (CPS_Exception $e) {
+} catch (cps\CPS_Exception $e) {
   var_dump($e->errors());
   exit;
 }

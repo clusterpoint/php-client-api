@@ -13,7 +13,7 @@ try {
   $cpsSimple = new cps\CPS_Simple($cpsConnection);
 
   // search for items with category == 'cars' and car_params/year >= 2010
-  $query = cps\CPS_Term('cars', 'category') . cps\CPS_Term('>=2010', 'car_params/year');
+  $query = cps\CPS::Term('cars', 'category') . cps\CPS::Term('>=2010', 'car_params/year');
   // return documents starting with the first one - offset 0
   $offset = 0;
   // return not more than 5 documents
@@ -26,7 +26,7 @@ try {
     'car_params/year' => 'yes'
   );
   // order by year, from largest to smallest
-  $ordering = cps\CPS_NumericOrdering('car_params/year', 'descending');
+  $ordering = cps\CPS::NumericOrdering('car_params/year', 'descending');
   $documents = $cpsSimple->search($query, $offset, $docs, $list, $ordering);
   foreach ($documents as $id => $document) {
     echo $document->car_params->make . ' ' . $document->car_params->model . '<br />';
