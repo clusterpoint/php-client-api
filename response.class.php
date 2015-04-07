@@ -200,6 +200,8 @@ class CPS_Response
         case 'verify-account':
         case 'login':
         case 'list-alerts':
+				case 'reset-hmac-keys':
+				case 'get-hmac-keys':
           $this->_contentArray = CPS_Response::simpleXmlToArray($cpsContent);
           break;
         case 'begin-transaction':
