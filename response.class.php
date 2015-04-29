@@ -394,11 +394,13 @@ class CPS_Response
     foreach ($source as $key => $value) {
       CPS_Response::simpleXmlToArrayHelper($res, $key, $value, $children);
     }
-    foreach ($source->children('www.clusterpoint.com') as $key => $value) {
-      $newkey = 'cps:' . $key;
-      CPS_Response::simpleXmlToArrayHelper($res, $newkey, $value, $children);
+    if ($source)
+    {
+        foreach ($source->children('www.clusterpoint.com') as $key => $value) {
+            $newkey = 'cps:' . $key;
+            CPS_Response::simpleXmlToArrayHelper($res, $newkey, $value, $children);
+        }
     }
-
     if (!$children)
       return (string)$source;
     return $res;
