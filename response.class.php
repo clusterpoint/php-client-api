@@ -64,8 +64,13 @@ class CPS_Response
           'source' => (string)$error->source,
           'level' => (string)$error->level
         );
-        if (isset($error->document_id))
-          $errorArray['document_id'] = (string)$error->document_id;
+        if (isset($error->document_id)){
+			$errorArray['document_id'] = (string) $error->document_id; // this line = backwards compatibility
+			$errorArray['document_ids'] = array();
+			foreach ($error->document_id as $errDocId) {
+				$errorArray['document_ids'][] = (string)$errDocId;
+			}
+		}
         $errors[] = $errorArray;
       }
     }
