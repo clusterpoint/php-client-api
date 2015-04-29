@@ -94,7 +94,7 @@ class CPS_Connection
         $this->_connectionString = $this->_parseConnectionString($this->_connectionSwitcher->getConnectionString($this->_storageName));
       }
       try {
-        if (strtolower($request->getCommand()) != 'begin-transaction')
+        if (strtolower($request->getCommand()) == 'begin-transaction')
           $this->setTransactionId(NULL);//reset transaction id to allow failover to another hub in case of failure        
         if (!is_null($this->_transactionId)) {
           $request->setParam('transaction_id', $this->_transactionId);
