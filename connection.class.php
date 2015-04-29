@@ -79,7 +79,7 @@ class CPS_Connection
    * Sends the request to CPS
    * @param CPS_Request &$request An object of the class Request
    */
-  public function sendRequest(CPS_Request &$request)
+  public function sendRequest(CPS_Request &$request, $json = false)
   {
     $firstSend = true;
     $previousRenderedStorage = '';
@@ -94,7 +94,7 @@ class CPS_Connection
         $this->_connectionString = $this->_parseConnectionString($this->_connectionSwitcher->getConnectionString($this->_storageName));
       }
       try {
-        if (strtolower($request->getCommand()) != 'begin-transaction')
+        if (strtolower($request->getCommand()) == 'begin-transaction')
           $this->setTransactionId(NULL);//reset transaction id to allow failover to another hub in case of failure        
         if (!is_null($this->_transactionId)) {
           $request->setParam('transaction_id', $this->_transactionId);
@@ -122,6 +122,9 @@ class CPS_Connection
             $ssl_options["cn"] = $this->_sslCustomCN;
           }
           $rawResponse = cps2_exchange($this->_connectionString['host'], $this->_connectionString['port'], $requestXml, $this->_storageName, $this->_lastNetworkDuration, $this->_hmacUserKey, $this->_hmacSignKey, $ssl_options);
+          if ($json) { // TODO: Jauzlabo JSON integracija
+            return $rawResponse;
+          }
         } else {
           // TODO: use curl?
           $rawResponse = cps_http_data(cps_http_post($this->_connectionString['url'], $requestXml, false, 'Recipient: ' . str_replace(array("\r", "\n"), '', $this->_storageName) . "\r\n", $this->_lastNetworkDuration, $this->_hmacUserKey, $this->_hmacSignKey));
