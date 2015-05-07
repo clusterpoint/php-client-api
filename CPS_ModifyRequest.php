@@ -1,5 +1,7 @@
 <?php
+//<namespace
 namespace cps;
+//namespace>
 
 /**
  * The CPS_ModifyRequest class is a wrapper for the Request class

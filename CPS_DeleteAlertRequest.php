@@ -1,5 +1,7 @@
 <?php
+//<namespace
 namespace cps;
+//namespace>
 
 /**
  * The CPS_RemoveAlertsRequest class is a wrapper for the Request class for the delete-alert command

@@ -1,5 +1,7 @@
 <?php
+//<namespace
 namespace cps;
+//namespace>
 
 class CPS_RollbackTransactionRequest extends CPS_Request
 {

@@ -1,5 +1,7 @@
 <?php
+//<namespace
 namespace cps;
+//namespace>
 
 /**
  * The CPS_SQLSearchRequest class is virtually identical to the {@link CPS_SearchRequest} class, but

@@ -1,10 +1,12 @@
 <?php
+//<namespace
 namespace cps;
 
 use \DOMDocument AS DOMDocument;
 use \DOMNode AS DOMNode;
 use \SimpleXMLElement AS SimpleXMLElement;
 use \stdClass AS stdClass;
+//namespace>
 
 /**
  * General request class for CPS API

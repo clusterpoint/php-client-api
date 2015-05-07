@@ -1,5 +1,7 @@
 <?php
+//<namespace
 namespace cps;
+//namespace>
 
 /**
  * The CPS_ListFirstRequest class is a wrapper for the Request class for list-first requests

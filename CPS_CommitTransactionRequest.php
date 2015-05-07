@@ -1,5 +1,7 @@
 <?php
+//<namespace
 namespace cps;
+//namespace>
 
 class CPS_CommitTransactionRequest extends CPS_Request
 {

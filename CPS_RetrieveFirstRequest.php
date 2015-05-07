@@ -1,5 +1,7 @@
 <?php
+//<namespace
 namespace cps;
+//namespace>
 
 /**
  * The CPS_RetrieveFirstRequest class is a wrapper for the Request class for retrieve-first requests

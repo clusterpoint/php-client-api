@@ -1,5 +1,7 @@
 <?php
+//<namespace
 namespace cps;
+//namespace>
 
 /**
  * The CPS_PRX_Changeset class represents a changeset for the partial-xreplace command.

@@ -1,5 +1,7 @@
 <?php
+//<namespace
 namespace cps;
+//namespace>
 
 /**
  * The CPS_AddAlertsRequest class is a wrapper for the Response class for the update-alert command

@@ -1,5 +1,7 @@
 <?php
+//<namespace
 namespace cps;
+//namespace>
 
 /**
  * The CPS_EnableAlertsRequest class is a wrapper for the Request class for the enable-alerts command

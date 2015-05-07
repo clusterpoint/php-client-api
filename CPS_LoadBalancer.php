@@ -1,7 +1,9 @@
 <?php
+//<namespace
 namespace cps;
 
 use \SimpleXMLElement AS SimpleXMLElement;
+//namespace>
 
 /**
  * The load balancer class - connects to different nodes randomly unless one of the nodes is down

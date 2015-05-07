@@ -1,5 +1,7 @@
 <?php
+//<namespace
 namespace cps;
+//namespace>
 
 /**
  * The CPS_AlternativesRequest class is a wrapper for the Response class for the alternatives command

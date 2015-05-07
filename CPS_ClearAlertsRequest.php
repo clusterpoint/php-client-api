@@ -1,5 +1,7 @@
 <?php
+//<namespace
 namespace cps;
+//namespace>
 
 /**
  * The CPS_ClearAlertsRequest class is a wrapper for the Request class for the clear-alerts command

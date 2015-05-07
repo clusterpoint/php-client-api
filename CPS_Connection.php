@@ -1,8 +1,11 @@
 <?php
+//<namespace
 namespace cps;
+
 
 use \Iterator AS Iterator;
 use \DOMDocument AS DOMDocument;
+//namespace>
 
 /**
  * Connection class for CPS API

@@ -1,5 +1,7 @@
 <?php
+//<namespace
 namespace cps;
+//namespace>
 
 /**
  * This class, which is derived from the CPS_Request class, can be used to send pre-formed XML requests to the storage.

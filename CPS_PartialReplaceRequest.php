@@ -1,5 +1,7 @@
 <?php
+//<namespace
 namespace cps;
+//namespace>
 
 /**
  * The CPS_PartialReplaceRequest class is a wrapper for the Response class for the partial-replace command

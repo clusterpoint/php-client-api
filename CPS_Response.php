@@ -1,7 +1,11 @@
 <?php
+//<namespace
 namespace cps;
+
 use \SimpleXMLElement AS SimpleXMLElement;
 use \stdClass AS stdClass;
+//namespace>
+
 /**
  * General response class for CPS API
  * @package CPS

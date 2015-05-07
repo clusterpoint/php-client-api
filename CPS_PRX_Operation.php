@@ -1,6 +1,9 @@
 <?php
+//<namespace
 namespace cps;
+
 use \DOMDocument AS DOMDocument;
+//namespace>
 
 /**
  * The CPS_PRX_Operation class represents a particular operation for the partial-xreplace command.

@@ -1,5 +1,7 @@
 <?php
+//<namespace
 namespace cps;
+//namespace>
 
 /**
  * The CPS_SearchDeleteRequest class is a wrapper for the Request class for the search-delete command
