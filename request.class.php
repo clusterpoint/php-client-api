@@ -124,8 +124,10 @@ class CPS_Request {
 
         // envelope parameters first
         foreach ($envelopeParams as $name => $value) {
+					if($value) {
             $root->appendChild($this->_requestDom->createElement('cps:' . $name , $this->getValidXmlValue($value)));
-        }
+        	}
+				}
         $contentTag = $root->appendChild($this->_requestDom->createElement('cps:content'));
 
         // content tag text parameters

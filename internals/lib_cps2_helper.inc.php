@@ -76,7 +76,7 @@ function cps2_exchange($host, $port, $message, $recipient, &$networkTime, $hmacU
 		}
 		$length = strlen($pbsendbytes);
 		$header = cps2_header($length);
-		
+
 		$time_start = microtime(true);
 		sock_write($sock, $header . $pbsendbytes, 8 + $length);
 		$header = sock_read($sock, 8);
