@@ -691,32 +691,32 @@ class CPS_LoadBalancer
       $this->logFailure();
       return ($this->_retryRequests && !$transaction_id);
     }
-    $sp = strpos($responseString, '<cps:error>');
-    if ($sp === FALSE) {
-      $this->logSuccess();
-      return false;
-    }
-    $ep = strrpos($responseString, '</cps:error>');
-    if ($ep === FALSE) {// shouldn't really ever happen, unless our XML response was cut off?
-      $this->logFailure();
-      return ($this->_retryRequests && !$transaction_id);
-    }
-    try {
-      $errorXml = new SimpleXMLElement('<root xmlns:cps="www.clusterpoint.com">' . substr($responseString, $sp, $ep - $sp + strlen('</cps:error>')) . '</root>');
-    } catch (Exception $e) {
-      // Unable to parse errors - shouldn't really ever happen, unless there's something wrong with this function
-      return ($this->_retryRequests && !$transaction_id);
-    }
-    foreach ($errorXml->children('www.clusterpoint.com')->error as $e) {
-      $code = (int)$e->children('')->code;
-      $level = (string)$e->children('')->level;
+//     $sp = strpos($responseString, '<cps:error>');
+//     if ($sp === FALSE) {
+//       $this->logSuccess();
+//       return false;
+//     }
+//     $ep = strrpos($responseString, '</cps:error>');
+//     if ($ep === FALSE) {// shouldn't really ever happen, unless our XML response was cut off?
+//       $this->logFailure();
+//       return ($this->_retryRequests && !$transaction_id);
+//     }
+//     try {
+//       $errorXml = new SimpleXMLElement('<root xmlns:cps="www.clusterpoint.com">' . substr($responseString, $sp, $ep - $sp + strlen('</cps:error>')) . '</root>');
+//     } catch (Exception $e) {
+//       // Unable to parse errors - shouldn't really ever happen, unless there's something wrong with this function
+//       return ($this->_retryRequests && !$transaction_id);
+//     }
+//     foreach ($errorXml->children('www.clusterpoint.com')->error as $e) {
+//       $code = (int)$e->children('')->code;
+//       $level = (string)$e->children('')->level;
 
-      if (($level == 'FAILED') || ($level == 'ERROR') || ($level == 'FATAL') || ($code == 2344)) {
-        // request returned an error, should retry
-        $this->logFailure();
-        return ($this->_retryRequests && !$transaction_id);
-      }
-    }
+//       if (($level == 'FAILED') || ($level == 'ERROR') || ($level == 'FATAL') || ($code == 2344)) {
+//         // request returned an error, should retry
+//         $this->logFailure();
+//         return ($this->_retryRequests && !$transaction_id);
+//       }
+//     }
     $this->logSuccess();
     return false;
   }
