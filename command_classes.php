@@ -33,7 +33,10 @@ function CPS_Term($term, $xpath = '', $escape = TRUE)
             }
         }
     }
-    return $prefix . ($escape ? htmlspecialchars($term, ENT_NOQUOTES) : $term) . $postfix;
+
+	// ENT_NOQUOTES	Will leave both double and single quotes unconverted.
+	// ENT_SUBSTITUTE	Replace invalid code unit sequences with a Unicode Replacement Character U+FFFD (UTF-8) or &#FFFD; (otherwise) instead of returning an empty string.
+    return $prefix . ($escape ? htmlspecialchars($term, ENT_NOQUOTES | ENT_SUBSTITUTE) : $term) . $postfix;
 }
 
 /**
