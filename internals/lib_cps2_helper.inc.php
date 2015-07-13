@@ -72,6 +72,7 @@ function cps2_exchange($host, $port, $message, $recipient, &$networkTime, $hmacU
 			$pbsend->NewFieldFixed64_is_32bit(15, $validity = date("U") + 10);
 			$pbsend->NewFieldString(16, $hmacUserKey);
 			$pbsend->NewFieldString(17, sha1(sha1($message) . $token . $validity . $hmacSignKey));
+			$pbsend->NewFieldString(18, hash_hmac('sha1', $message . $token . $validity, $hmacSignKey));
 			$pbsendbytes = $pbsend->ToBytes();
 		}
 		$length = strlen($pbsendbytes);
