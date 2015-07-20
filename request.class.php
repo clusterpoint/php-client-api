@@ -463,6 +463,10 @@ class CPS_Request {
 
  	private static function isValidUTF8($string)
     {
+        if (function_exists("mb_check_encoding")) {
+            return mb_check_encoding($string, 'UTF8');
+        }
+
         return preg_match('%^(?:
         		[\x09\x0A\x0D\x20-\x7E]            # ASCII
         		| [\xC2-\xDF][\x80-\xBF]             # non-overlong 2-byte
