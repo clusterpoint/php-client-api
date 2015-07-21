@@ -1,7 +1,4 @@
 <?php
-//<namespace
-namespace cps;
-//namespace>
 
 /**
  * The CPS_ListLastRequest class is a wrapper for the Request class for list-last requests

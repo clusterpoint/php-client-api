@@ -1,7 +1,4 @@
 <?php
-//<namespace
-namespace cps;
-//namespace>
 
 /**
  * The CPS_ListFacetsRequest class is a wrapper for the Response class for the list-facets command

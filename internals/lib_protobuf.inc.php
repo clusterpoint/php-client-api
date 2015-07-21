@@ -1,6 +1,5 @@
 <?php
 
-namespace cps;
 
 // according to --> http://code.google.com/apis/protocolbuffers/docs/encoding.html
 

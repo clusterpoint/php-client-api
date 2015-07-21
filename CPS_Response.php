@@ -1,10 +1,4 @@
 <?php
-//<namespace
-namespace cps;
-
-use \SimpleXMLElement AS SimpleXMLElement;
-use \stdClass AS stdClass;
-//namespace>
 
 /**
  * General response class for CPS API
@@ -71,8 +65,13 @@ class CPS_Response
           'source' => (string)$error->source,
           'level' => (string)$error->level
         );
-        if (isset($error->document_id))
-          $errorArray['document_id'] = (string)$error->document_id;
+        if (isset($error->document_id)) {
+          $errorArray['document_id'] = (string)$error->document_id; // this line = backwards compatibility
+          $errorArray['document_ids'] = array();
+          foreach ($error->document_id as $errDocId) {
+            $errorArray['document_ids'][] = (string)$errDocId;
+          }
+        }
         $errors[] = $errorArray;
       }
     }
@@ -92,6 +91,8 @@ class CPS_Response
 
       $docs = NULL;
       $saveDocs = true;
+      // extracting documents / document IDs
+      $idPath = $connection->getDocumentIdXpath();
       switch ($this->_command) {
         case 'update':
         case 'insert':
@@ -101,6 +102,7 @@ class CPS_Response
         case 'partial-xreplace':
         case 'replace':
           $docs = $cpsContent;
+          $idPath[0] = 'document'; // TODO: Jasalabo datubazes puse lai atgriez korekti
         case 'lookup':
           if (!isset($cpsContent->results)) {
             $docs = $cpsContent;
@@ -124,9 +126,6 @@ class CPS_Response
               $docs = array();
             }
           }
-          // extracting documents / document IDs
-          $idPath = $connection->getDocumentIdXpath();
-
           $curpos = 0;
           foreach ($docs as $rootTag => $doc) {
             if ($rootTag == $idPath[0]) {
@@ -207,6 +206,8 @@ class CPS_Response
         case 'verify-account':
         case 'login':
         case 'list-alerts':
+        case 'reset-hmac-keys':
+        case 'get-hmac-keys':
           $this->_contentArray = CPS_Response::simpleXmlToArray($cpsContent);
           break;
         case 'begin-transaction':
@@ -399,11 +400,12 @@ class CPS_Response
     foreach ($source as $key => $value) {
       CPS_Response::simpleXmlToArrayHelper($res, $key, $value, $children);
     }
-    foreach ($source->children('www.clusterpoint.com') as $key => $value) {
-      $newkey = 'cps:' . $key;
-      CPS_Response::simpleXmlToArrayHelper($res, $newkey, $value, $children);
+    if ($source) {
+      foreach ($source->children('www.clusterpoint.com') as $key => $value) {
+        $newkey = 'cps:' . $key;
+        CPS_Response::simpleXmlToArrayHelper($res, $newkey, $value, $children);
+      }
     }
-
     if (!$children)
       return (string)$source;
     return $res;

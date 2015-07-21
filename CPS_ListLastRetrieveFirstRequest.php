@@ -1,7 +1,4 @@
 <?php
-//<namespace
-namespace cps;
-//namespace>
 
 /**
  * The CPS_ListLastRetrieveFirstRequest class is a wrapper for the Request class for list-last, list-first, retrieve-last, and retrieve-first requests

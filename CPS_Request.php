@@ -1,19 +1,9 @@
 <?php
-//<namespace
-namespace cps;
-
-use \DOMDocument AS DOMDocument;
-use \DOMNode AS DOMNode;
-use \SimpleXMLElement AS SimpleXMLElement;
-use \stdClass AS stdClass;
-//namespace>
 
 /**
  * General request class for CPS API
  * @package CPS
  */
-
-
 
 
 /**
@@ -125,7 +115,9 @@ class CPS_Request
 
     // envelope parameters first
     foreach ($envelopeParams as $name => $value) {
-      $root->appendChild($this->_requestDom->createElement('cps:' . $name, $this->getValidXmlValue($value)));
+      if ($value) {
+        $root->appendChild($this->_requestDom->createElement('cps:' . $name, $this->getValidXmlValue($value)));
+      }
     }
     $contentTag = $root->appendChild($this->_requestDom->createElement('cps:content'));
 
@@ -405,6 +397,8 @@ class CPS_Request
               $destNode->appendChild($newDestNode);
             }
             if (is_string($v) || is_float($v) || is_int($v) || (($v instanceof SimpleXMLElement) && (count($v->children()) == 0))) {
+              if (!CPS_Request::isValidUTF8((string)$v))
+                throw new CPS_Exception(array(array('long_message' => 'Invalid UTF-8 encoding in key = \'' . $key . '\'', 'code' => ERROR_CODE_INVALID_UTF8, 'level' => 'ERROR', 'source' => 'CPS_API')));
               $textNode = $subdoc->createTextNode((string)self::getValidXmlValue($v));
               $newDestNode->appendChild($textNode);
             } else {
@@ -422,6 +416,8 @@ class CPS_Request
       } else if (is_object($value)) {
         self::_loadIntoDom($subdoc, $newDestNode, $value);
       } else if (is_string($value) || is_float($value) || is_int($value)) {
+        if (!CPS_Request::isValidUTF8((string)$value))
+          throw new CPS_Exception(array(array('long_message' => 'Invalid UTF-8 encoding in key = \'' . $key . '\'', 'code' => ERROR_CODE_INVALID_UTF8, 'level' => 'ERROR', 'source' => 'CPS_API')));
         $textNode = $subdoc->createTextNode((string)self::getValidXmlValue($value));
         $newDestNode->appendChild($textNode);
       }
@@ -444,6 +440,8 @@ class CPS_Request
           $curChild = $nextChild;
         }
         // set the ID
+        if (!CPS_Request::isValidUTF8((string)$id))
+          throw new CPS_Exception(array(array('long_message' => 'Invalid UTF-8 encoding in key = \'id\'', 'code' => ERROR_CODE_INVALID_UTF8, 'level' => 'ERROR', 'source' => 'CPS_API')));
         $textNode = $subdoc->createTextNode($id);
         $parentNode->appendChild($textNode);
       } else {
@@ -469,6 +467,23 @@ class CPS_Request
     }
   }
 
+  private static function isValidUTF8($string)
+  {
+    if (function_exists("mb_check_encoding")) {
+      return mb_check_encoding($string, 'UTF8');
+    }
+
+    return preg_match('%^(?:
+        		[\x09\x0A\x0D\x20-\x7E]            # ASCII
+        		| [\xC2-\xDF][\x80-\xBF]             # non-overlong 2-byte
+        		| \xE0[\xA0-\xBF][\x80-\xBF]         # excluding overlongs
+        		| [\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}  # straight 3-byte
+        		| \xED[\x80-\x9F][\x80-\xBF]         # excluding surrogates
+        		| \xF0[\x90-\xBF][\x80-\xBF]{2}      # planes 1-3
+        		| [\xF1-\xF3][\x80-\xBF]{3}          # planes 4-15
+        		| \xF4[\x80-\x8F][\x80-\xBF]{2}      # plane 16
+        		)*$%xs', $string);
+  }
 
   private $_textParamNames;
   private $_rawParamNames;

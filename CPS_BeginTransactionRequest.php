@@ -1,7 +1,4 @@
 <?php
-//<namespace
-namespace cps;
-//namespace>
 
 class CPS_BeginTransactionRequest extends CPS_Request
 {

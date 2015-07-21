@@ -6,12 +6,12 @@ require_once('../cps_api.php');
 
 try {
   // creating a CPS_Connection instance
-  $cpsConnection = new cps\CPS_Connection($config['connection'], $config['database'], $config['username'], $config['password'],
+  $cpsConnection = new CPS_Connection($config['connection'], $config['database'], $config['username'], $config['password'],
     'document', '//document/id', array('account' => $config['account']));
 
   // Setting parameters
   // search for items with category == 'cars' and car_params/year >= 2010
-  $query = cps\CPS::Term('cars', 'category') . cps\CPS::Term('>=2010', 'car_params/year');
+  $query = CPS::Term('cars', 'category') . CPS::Term('>=2010', 'car_params/year');
   // return documents starting with the first one - offset 0
   $offset = 0;
   // return not more than 5 documents
@@ -24,11 +24,11 @@ try {
     'car_params/year' => 'yes'
   );
   // order by year, from largest to smallest
-  $ordering = cps\CPS::NumericOrdering('car_params/year', 'descending');
+  $ordering = CPS::NumericOrdering('car_params/year', 'descending');
 
   // Searching for documents
   // note that only the query parameter is mandatory - the rest are optional
-  $searchRequest = new cps\CPS_SearchRequest($query, $offset, $docs, $list);
+  $searchRequest = new CPS_SearchRequest($query, $offset, $docs, $list);
   $searchRequest->setOrdering($ordering);
   $searchResponse = $cpsConnection->sendRequest($searchRequest);
   if ($searchResponse->getHits() > 0) {
@@ -42,7 +42,7 @@ try {
   } else {
     echo 'Nothing found.';
   }
-} catch (cps\CPS_Exception $e) {
+} catch (CPS_Exception $e) {
   var_dump($e->errors());
   exit;
 }

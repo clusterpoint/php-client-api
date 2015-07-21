@@ -1,7 +1,4 @@
 <?php
-//<namespace
-namespace cps;
-//namespace>
 
 /**
  * The CPS_LookupRequest class is a wrapper for the Request class

@@ -1,7 +1,4 @@
 <?php
-//<namespace
-namespace cps;
-//namespace>
 
 /**
  * The CPS_DisableAlertsRequest class is a wrapper for the Request class for the disable-alerts command
