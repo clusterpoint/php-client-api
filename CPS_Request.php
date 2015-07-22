@@ -22,7 +22,6 @@ class CPS_Request
     $this->_command = $command;
     $this->_requestId = $requestId;
     $this->_label = '';
-    $this->_shapes = '';
     $this->_requestType = NULL;
     $this->_textParams = array();
     $this->_rawParams = array();
