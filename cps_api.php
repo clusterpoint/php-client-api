@@ -8,7 +8,7 @@
  * Including all classes
  */
 
-require_once(dirname(__FILE__) . '/CPS.php');
+require_once(dirname(__FILE__) . '/command_classes.php');
 
 require_once(dirname(__FILE__) . '/CPS_PRX_Operation.php');
 
@@ -24,6 +24,7 @@ require_once(dirname(__FILE__) . '/CPS_PRX_Changeset.php');
 require_once(dirname(__FILE__) . '/CPS_PartialXRequest.php');
 require_once(dirname(__FILE__) . '/CPS_DeleteRequest.php');
 require_once(dirname(__FILE__) . '/CPS_SearchRequest.php');
+require_once(dirname(__FILE__) . '/CPS_SQLSearchRequest.php');
 //require_once(dirname(__FILE__) . '/CPS_SearchDeleteRequest.php'); //v2.3
 require_once(dirname(__FILE__) . '/CPS_RetrieveRequest.php');
 require_once(dirname(__FILE__) . '/CPS_LookupRequest.php');

@@ -1,7 +1,5 @@
 <?php
 
-require_once(dirname(__FILE__) . '/CPS_SQLSearchRequest.php');
-
   /**
    * CPS Simple API
    * @package CPS

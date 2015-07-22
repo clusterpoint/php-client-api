@@ -92,6 +92,56 @@ class CPS
   }
 
   /**
+   * Returns an circle definition string with provided center and radius
+   * @function
+   * @param String $name name of a shape, should be a valid xml name
+   * @param array $center array with two elements identifying center of circle
+   * @param double|String $radius radius of circle with optional distance type (km/mi), default is km
+   * @param String $tagName1 tag name of first coordinate (e.g. latitude), if not passed, then default configuration values will be used
+   * @param String $tagName2 tag name of second coordinate (e.g. longitude), if not passed, then default configuration values will be used
+   * @param String $coord_type coordinate type, either latlong or plane
+   */
+  public static function CircleDefinition($name, $center, $radius, $tagName1 = null, $tagName2 = null, $coord_type = null)
+  {
+    $res = '<' . $name . '>';
+    $res .= '<center>' . $center[0] . ' ' . $center[1] . '</center>';
+    $res .= '<radius>' . $radius . '</radius>';
+    if ($tagName1)
+      $res .= '<coord1_tag_name>' . $tagName1 . '</coord1_tag_name>';
+    if ($tagName2)
+      $res .= '<coord2_tag_name>' . $tagName2 . '</coord2_tag_name>';
+    if ($coord_type)
+      $res .= '<coord_type>' . $coord_type . '</coord_type>';
+    $res .= '</' . $name . '>';
+    return $res;
+  }
+
+  /**
+   * Returns an polygon definition string from provided vertice points
+   * @function
+   * @param String $name name of a shape, should be a valid xml name
+   * @param array $vertices array of vertice coordinates identifying polygon each element should contain array of two elements which correspond to vertice coordinates
+   * @param String $tagName1 tag name of first coordinate (e.g. latitude), if not passed, then default configuration values will be used
+   * @param String $tagName2 tag name of second coordinate (e.g. longitude), if not passed, then default configuration values will be used
+   * @param String $coord_type coordinate type, either latlong or plane
+   */
+  public static function PolygonDefinition($name, $vertices, $tagName1 = null, $tagName2 = null, $coord_type = null)
+  {
+    $res = '<' . $name . '>';
+    foreach ($vertices as $vertice) {
+      $res .= $vertice[0] . ' ' . $vertice[1] . '; ';
+    }
+    if ($tagName1)
+      $res .= '<coord1_tag_name>' . $tagName1 . '</coord1_tag_name>';
+    if ($tagName2)
+      $res .= '<coord2_tag_name>' . $tagName2 . '</coord2_tag_name>';
+    if ($coord_type)
+      $res .= '<coord_type>' . $coord_type . '</coord_type>';
+    $res .= '</' . $name . '>';
+    return $res;
+  }
+
+  /**
    * Returns an ordering string for sorting by relevance
    * @see CPS_SearchRequest::setOrdering()
    * @param string $ascdesc optional parameter to specify ascending/descending order. By default most relevant documents are returned first

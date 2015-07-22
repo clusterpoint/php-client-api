@@ -22,6 +22,7 @@ class CPS_Request
     $this->_command = $command;
     $this->_requestId = $requestId;
     $this->_label = '';
+    $this->_shapes = '';
     $this->_requestType = NULL;
     $this->_textParams = array();
     $this->_rawParams = array();
@@ -89,7 +90,8 @@ class CPS_Request
       'alert',
       'query',
       'list',
-      'ordering'
+      'ordering',
+      'shapes'
     );
   }
 
@@ -251,6 +253,36 @@ class CPS_Request
   }
 
   /**
+   * Sets shape definition for geospatial search
+   * @param String|array $value A single shape definition as string or array of string that define multiple shapes
+   * @param bool $replace Should previous set values be replaced
+   */
+  public function setShape($value, $replace = true)
+  {
+    $name = 'shapes';
+    if (!(is_array($value) || is_string($value))) {
+      throw new CPS_Exception(array(array('long_message' => 'Invalid request parameter', 'code' => ERROR_CODE_INVALID_PARAMETER, 'level' => 'REJECTED', 'source' => 'CPS_API')));
+    }
+    if ($replace) {
+      $this->_setRawParam($name, $value);
+    } else {
+      $exParam = $this->_getRawParam($name);
+      if (!is_array($exParam)) {
+        $exParam = array($exParam);
+      }
+      if (is_array($value)) {
+        foreach($value as $val){
+          $exParam[] = $val;
+        }
+      } else if (is_string($value)) {
+        $exParam[] = $value;
+      }
+      $this->_setRawParam($name, $exParam);
+    }
+
+  }
+
+  /**
    * sets a request parameter
    * @param string $name name of the parameter
    * @param mixed $value value to set. Could be a single string or an array of strings
@@ -371,6 +403,17 @@ class CPS_Request
     if (!is_array($value))
       $value = array($value);
     $this->_rawParams[$name] = $value;
+  }
+
+  /**
+   * gets a raw request parameter
+   * @param string $name name of the parameter
+   */
+  private function _getRawParam($name)
+  {
+    if(!isset($this->_rawParams[$name]))
+      return array();
+    return $this->_rawParams[$name];
   }
 
   /**
