@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * Configuration parameters for examples
+ */
+
+$config = array();
+
+$config['connection'] = 'tcp://cloud-eu-0.clusterpoint.com:9007';
+$config['database'] = 'xxx';
+$config['account'] = 'xxx';
+$config['username'] = 'xxx';
+$config['password'] = 'xxx';
