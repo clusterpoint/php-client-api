@@ -8,37 +8,25 @@ try {
   // creating a CPS_Connection instance
   $cpsConnection = new CPS_Connection($config['connection'], $config['database'], $config['username'], $config['password'],
     'document', '//document/id', array('account' => $config['account']));
-
+  $cpsConnection->setDebug(1);
   // Setting parameters
   // search for items with category == 'cars' and car_params/year >= 2010
-  $query = CPS_Term('cars', 'category') . CPS_Term('>=2010', 'car_params/year');
+  $query = CPS_Term('555', 'id');
   // return documents starting with the first one - offset 0
   $offset = 0;
   // return not more than 5 documents
   $docs = 5;
   // return these fields from the documents
-  $list = array(
-    'id' => 'yes',
-    'car_params/make' => 'yes',
-    'car_params/model' => 'yes',
-    'car_params/year' => 'yes'
-  );
-  // order by year, from largest to smallest
-  $ordering = CPS_NumericOrdering('car_params/year', 'descending');
-
+  $list = array();
   // Searching for documents
   // note that only the query parameter is mandatory - the rest are optional
   $searchRequest = new CPS_SearchRequest($query, $offset, $docs, $list);
-  $searchRequest->setOrdering($ordering);
   $searchResponse = $cpsConnection->sendRequest($searchRequest);
   if ($searchResponse->getHits() > 0) {
     // getHits returns the total number of documents in the storage that match the query
-    echo 'Found ' . $searchResponse->getHits() . ' documents<br />';
-    echo 'showing from ' . $searchResponse->getFrom() . ' to ' . $searchResponse->getTo() . '<br />';
-    foreach ($searchResponse->getDocuments() as $id => $document) {
-      echo $document->car_params->make . ' ' . $document->car_params->model . '<br />';
-      echo 'first registration in ' . $document->car_params->year . '<br />';
-    }
+    echo 'Found ' . $searchResponse->getHits() . " documents\n";
+var_dump($searchResponse->getDocuments()[555]->asXML());
+
   } else {
     echo 'Nothing found.';
   }

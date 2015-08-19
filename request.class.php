@@ -461,23 +461,32 @@ class CPS_Request {
         }
     }
 
- 	private static function isValidUTF8($string)
-    {
-        if (function_exists("mb_check_encoding")) {
-            return mb_check_encoding($string, 'UTF8');
+  private static function isValidUTF8($string)
+  {
+    $ret = preg_match('%^[\x{09}\x{0A}\x{0D}\x{20}-\x{7E}\x{C280}-\x{C2BF}\x{C380}-\x{C3BF}\x{C480}-\x{C4BF}\x{C580}-\x{C5BF}\x{C680}-\x{C6BF}\x{C780}-\x{C7BF}\x{C880}-\x{C8BF}\x{C980}-\x{C9BF}\x{CA80}-\x{CABF}\x{CB80}-\x{CBBF}\x{CC80}-\x{CCBF}\x{CD80}-\x{CDBF}\x{CE80}-\x{CEBF}\x{CF80}-\x{CFBF}\x{D080}-\x{D0BF}\x{D180}-\x{D1BF}\x{D280}-\x{D2BF}\x{D380}-\x{D3BF}\x{D480}-\x{D4BF}\x{D580}-\x{D5BF}\x{D680}-\x{D6BF}\x{D780}-\x{D7BF}\x{D880}-\x{D8BF}\x{D980}-\x{D9BF}\x{DA80}-\x{DABF}\x{DB80}-\x{DBBF}\x{DC80}-\x{DCBF}\x{DD80}-\x{DDBF}\x{DE80}-\x{DEBF}\x{DF80}-\x{DFBF}]*$%uxs', $string);
+    if (!$ret) {
+      if (function_exists("mb_strlen") && function_exists("mb_substr")) {
+        $str_len = mb_strlen($string, 'UTF-8');
+        $start = 0;
+        while ($start < $str_len) {
+          if (!preg_match('%^(?:
+          [\x09\x0A\x0D\x20-\x7E]              # ASCII
+          | [\xC2-\xDF][\x80-\xBF]             # non-overlong 2-byte
+          | \xE0[\xA0-\xBF][\x80-\xBF]         # excluding overlongs
+          | [\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}  # straight 3-byte
+          | \xED[\x80-\x9F][\x80-\xBF]         # excluding surrogates
+          | \xF0[\x90-\xBF][\x80-\xBF]{2}      # planes 1-3
+          | [\xF1-\xF3][\x80-\xBF]{3}          # planes 4-15
+          | \xF4[\x80-\x8F][\x80-\xBF]{2}      # plane 16
+          )*$%xs', mb_substr($string, $start, 1000, 'UTF-8'))
+          )
+            return 0;
+          $start = $start + 1000;
         }
-
-        return preg_match('%^(?:
-        		[\x09\x0A\x0D\x20-\x7E]            # ASCII
-        		| [\xC2-\xDF][\x80-\xBF]             # non-overlong 2-byte
-        		| \xE0[\xA0-\xBF][\x80-\xBF]         # excluding overlongs
-        		| [\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}  # straight 3-byte
-        		| \xED[\x80-\x9F][\x80-\xBF]         # excluding surrogates
-        		| \xF0[\x90-\xBF][\x80-\xBF]{2}      # planes 1-3
-        		| [\xF1-\xF3][\x80-\xBF]{3}          # planes 4-15
-        		| \xF4[\x80-\x8F][\x80-\xBF]{2}      # plane 16
-        		)*$%xs', $string);
+      }
     }
+    return 1;
+  }
 
     private $_textParamNames;
     private $_rawParamNames;

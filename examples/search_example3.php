@@ -8,7 +8,7 @@ try {
   // creating a CPS_Connection instance
   $cpsConnection = new CPS_Connection($config['connection'], $config['database'], $config['username'], $config['password'],
     'document', '//document/id', array('account' => $config['account']));
-
+$cpsConnection->setDebug(1);
   // Setting parameters
   // search for items with category == 'cars' and car_params/year >= 2010
   $query = CPS_Term('cars', 'category') . CPS_Term('>=2010', 'car_params/year');
@@ -23,12 +23,15 @@ try {
     'car_params/model' => 'yes',
     'car_params/year' => 'yes'
   );
+  $listXml = '<id>yes</id>  <car_params><make>yes</make></car_params>  <car_params><model listas="modelis">yes</model></car_params>  <car_params><year>yes</year></car_params>';
+
   // order by year, from largest to smallest
   $ordering = CPS_NumericOrdering('car_params/year', 'descending');
 
   // Searching for documents
   // note that only the query parameter is mandatory - the rest are optional
-  $searchRequest = new CPS_SearchRequest($query, $offset, $docs, $list);
+  $searchRequest = new CPS_SearchRequest($query, $offset, $docs);
+  $searchRequest->setParam('list', $listXml);
   $searchRequest->setOrdering($ordering);
   $searchResponse = $cpsConnection->sendRequest($searchRequest);
   if ($searchResponse->getHits() > 0) {
