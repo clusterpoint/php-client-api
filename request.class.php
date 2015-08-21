@@ -435,7 +435,7 @@ class CPS_Request {
                 }
                 // set the ID
                 if (!CPS_Request::isValidUTF8((string) $id))
-                	throw new CPS_Exception(array(array('long_message' => 'Invalid UTF-8 encoding in key = \''.$key.'\'', 'code' => ERROR_CODE_INVALID_UTF8, 'level' => 'ERROR', 'source' => 'CPS_API')));
+                	throw new CPS_Exception(array(array('long_message' => 'Invalid UTF-8 encoding in document ID', 'code' => ERROR_CODE_INVALID_UTF8, 'level' => 'ERROR', 'source' => 'CPS_API')));
                 $textNode = $subdoc->createTextNode($id);
                 $parentNode->appendChild($textNode);
             } else {
