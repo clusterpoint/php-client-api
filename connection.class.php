@@ -556,8 +556,8 @@ class CPS_LoadBalancer
     $this->_statusFilePrefix = '/tmp/cps-api-node-status-';
     $this->_sendWhenAllFailed = true;
     $this->_debug = false;
-    $this->_non_retry_cmds = array('update', 'delete', 'replace', 'partial-replace', 'partial-xreplace', 'insert', 'create-alert', 'update-alerts', 'delete-alerts', 
-      'search-delete', 'commit-transaction', 'rollback-transaction'); 
+    $this->_non_retry_cmds = array('update', 'delete', 'replace', 'partial-replace', 'partial-xreplace', 'insert', 'create-alert', 'update-alerts', 'delete-alerts',
+      'search-delete', 'commit-transaction', 'rollback-transaction');
   }
 
   /**
@@ -606,6 +606,22 @@ class CPS_LoadBalancer
       $this->_lastSuccess = false;
       return $this->_connectionStrings[$this->_lastReturnedIndex];
     }
+    if ($this->_numUsed == 0) {
+      $noFreeConn = true;
+      for ($i = 0; $i < count($this->_connectionStrings); $i++) {
+        $hash = md5($this->_connectionStrings[$i] . (isset($this->_storageNames[$i]) ? '|' . $this->_storageNames[$i] : ''));
+        if (!file_exists($this->_statusFilePrefix . $hash)) {
+          $noFreeConn = false;
+          break;
+        }
+      }
+      if ($noFreeConn) {
+        for ($i = 0; $i < count($this->_connectionStrings); $i++) {
+          $hash = md5($this->_connectionStrings[$i] . (isset($this->_storageNames[$i]) ? '|' . $this->_storageNames[$i] : ''));
+          @unlink($this->_statusFilePrefix . $hash);
+        }
+      }
+    }
 
     // otherwise, select a connection string randomly
     do {
@@ -643,7 +659,7 @@ class CPS_LoadBalancer
     if (isset($this->_storageNames[$i]))
       $storageName = $this->_storageNames[$i];
     $this->_lastReturnedIndex = $i;
-    $this->_lastSuccess = true;
+//    $this->_lastSuccess = true;
     if ($this->_debug) {
       printf("[LoadBalancer] Connecting to %s<br />\n", $this->_connectionStrings[$i] . (isset($this->_storageNames[$i]) ? '|' . $this->_storageNames[$i] : ''));
     }
@@ -685,11 +701,20 @@ class CPS_LoadBalancer
    */
   public function shouldRetry(&$responseString, $exception, $transaction_id)
   {
-    if ($this->_numUsed == count($this->_connectionStrings))
+    // Is transaction - no retry
+    if ($transaction_id)
+      return false;
+    if (!$this->_retryRequests)
       return false;
     if (!is_null($exception)) {
       $this->logFailure();
-      return ($this->_retryRequests && !$transaction_id);
+      if ($this->_numUsed == count($this->_connectionStrings)) {
+        echo "nav hubi\n";
+        return false;
+      }
+      if ($exception->code() == 9006 && $exception->errors()[0]['source'] == "CPS_API")
+        return true;
+      return false;
     }
 //     $sp = strpos($responseString, '<cps:error>');
 //     if ($sp === FALSE) {
