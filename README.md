@@ -1,9 +1,14 @@
 #php-client-api#
 ==============
 
-* [Clusterpoint PHP API library overview](http://docs.clusterpoint.com/wiki/PHP_API_overview)
+* [Clusterpoint WEB page](https://www.clusterpoint.com/)
 
-* [Clusterpoint examples](http://docs.clusterpoint.com/examples)
+* [Clusterpoint Documentation page](https://www.clusterpoint.com/docs/)
+
+* [Clusterpoint API library reference and examples](https://www.clusterpoint.com/docs/?page=Reference)
+
+* [Clusterpoint tutorials](https://www.clusterpoint.com/docs/?page=Tutorials)
+
 
 ##Support##
 Please feel free to contact the maintainer of this package on
