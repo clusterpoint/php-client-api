@@ -9,7 +9,7 @@ try {
   $cpsConnection = new CPS_Connection($config['connection'], $config['database'], $config['username'], $config['password'],
     'document', '//document/id', array('account' => $config['account']));
 
-  // looking up 10 last documents - list only the name
+  // looking up 10 first documents - list only the name
   $listLastRequest = new CPS_ListFirstRequest(array('document' => 'no', 'name' => 'yes'), 0, 10);
   $listLastResponse = $cpsConnection->sendRequest($listLastRequest);
   foreach ($listLastResponse->getDocuments() as $id => $document) {
