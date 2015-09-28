@@ -709,7 +709,6 @@ class CPS_LoadBalancer
     if (!is_null($exception)) {
       $this->logFailure();
       if ($this->_numUsed == count($this->_connectionStrings)) {
-        echo "nav hubi\n";
         return false;
       }
 	  $errors = $exception->errors();
