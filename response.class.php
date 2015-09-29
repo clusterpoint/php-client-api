@@ -184,7 +184,6 @@ class CPS_Response
         case 'edit-database':
         case 'rename-database':
         case 'drop-database':
-        case 'describe-database':
         case 'list-nodes':
         case 'list-hubs':
         case 'list-hosts':
@@ -208,6 +207,11 @@ class CPS_Response
         case 'reset-hmac-keys':
         case 'get-hmac-keys':
           $this->_contentArray = CPS_Response::simpleXmlToArray($cpsContent);
+          break;
+        case 'describe-database':
+          $this->_contentArray = CPS_Response::simpleXmlToArray($cpsContent);
+          $rawDataModelXML = substr($responseXml, strpos($responseXml, '<overrides>')+11, (strpos($responseXml, '</overrides>') - strpos($responseXml, '<overrides>') - 11));
+          $this->_contentArray['overrides'] = $rawDataModelXML;
           break;
         case 'begin-transaction':
           $connection->setTransactionId((string)$cpsContent->transaction_id);
@@ -376,7 +380,7 @@ class CPS_Response
    * Helper function for conversions. Used internally.
    */
   static function simpleXmlToArrayHelper(&$res, &$key, &$value, &$children)
-  {
+  { 
     if (isset($res[$key])) {
       if (is_string($res[$key]) || (is_array($res[$key]) && is_assoc($res[$key]))) {
         $res[$key] = array($res[$key]);
@@ -395,9 +399,8 @@ class CPS_Response
   {
     $res = array();
     $children = false;
-
     foreach ($source as $key => $value) {
-      CPS_Response::simpleXmlToArrayHelper($res, $key, $value, $children);
+        CPS_Response::simpleXmlToArrayHelper($res, $key, $value, $children);
     }
     if ($source) {
       foreach ($source->children('www.clusterpoint.com') as $key => $value) {
