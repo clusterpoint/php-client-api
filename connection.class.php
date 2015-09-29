@@ -95,7 +95,7 @@ class CPS_Connection
       }
       try {
         if (strtolower($request->getCommand()) == 'begin-transaction')
-          $this->setTransactionId(NULL);//reset transaction id to allow failover to another hub in case of failure        
+          $this->setTransactionId(NULL);//reset transaction id to allow failover to another hub in case of failure
         if (!is_null($this->_transactionId)) {
           $request->setParam('transaction_id', $this->_transactionId);
         }
@@ -709,10 +709,10 @@ class CPS_LoadBalancer
     if (!is_null($exception)) {
       $this->logFailure();
       if ($this->_numUsed == count($this->_connectionStrings)) {
-        echo "nav hubi\n";
         return false;
       }
-      if ($exception->code() == 9006 && $exception->errors()[0]['source'] == "CPS_API")
+	  $errors = $exception->errors();
+      if ($exception->code() == 9006 && $errors[0]['source'] == "CPS_API")
         return true;
       return false;
     }
