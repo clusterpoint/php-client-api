@@ -134,13 +134,14 @@ class CPS_Response
                 $id = '';
                 $cur = $doc;
                 for ($i = 1; $i < count($idPath); ++$i) {
-                  if (!isset($cur->$idPath[$i])) {
+					$path = $idPath[$i];
+                  if (!isset($cur->$path)) {
                     break;
                   }
                   if ($i == count($idPath) - 1) {
-                    $id = (string)$cur->$idPath[$i];
+                    $id = (string)$cur->$path;
                   } else {
-                    $cur = $cur->$idPath[$i];
+                    $cur = $cur->$path;
                   }
                 }
               }
@@ -380,7 +381,7 @@ class CPS_Response
    * Helper function for conversions. Used internally.
    */
   static function simpleXmlToArrayHelper(&$res, &$key, &$value, &$children)
-  { 
+  {
     if (isset($res[$key])) {
       if (is_string($res[$key]) || (is_array($res[$key]) && is_assoc($res[$key]))) {
         $res[$key] = array($res[$key]);
