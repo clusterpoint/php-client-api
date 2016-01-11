@@ -207,6 +207,7 @@ class CPS_Response
         case 'list-alerts':
         case 'reset-hmac-keys':
         case 'get-hmac-keys':
+        case 'delete-operation':
           $this->_contentArray = CPS_Response::simpleXmlToArray($cpsContent);
           break;
         case 'describe-database':
