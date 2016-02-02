@@ -2,7 +2,7 @@
     "name": "clusterpoint/php-client-api",
     "type": "library",
     "license": "MIT",
-    "version": "3.0",
+    "version": "3.0.2",
     "keywords": ["clusterpoint","api"],
     "homepage": "https://www.clusterpoint.com/",
     "require": {
@@ -10,7 +10,7 @@
     },
     "authors": [
               {
-                  "name": "ClusterPoint"
+                  "name": "Clusterpoint"
               }
     ],
     "autoload": {
