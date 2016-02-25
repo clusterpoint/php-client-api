@@ -554,8 +554,8 @@ class CPS_LoadBalancer
     $this->_lastSuccess = false;
     $this->_exclusionTime = 30;
     $tmp =  sys_get_temp_dir();
-    if (substr($tmp, strlen($tmp) - 1) !== "/") {
-      $tmp .= "/";
+    if (substr($tmp, strlen($tmp) - 1) !== DIRECTORY_SEPARATOR) {
+      $tmp .= DIRECTORY_SEPARATOR;
     };
     $this->_statusFilePrefix = $tmp . "cps-api-node-status-";
     $this->_sendWhenAllFailed = true;
