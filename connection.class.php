@@ -553,7 +553,11 @@ class CPS_LoadBalancer
     $this->_lastReturnedIndex = -1;
     $this->_lastSuccess = false;
     $this->_exclusionTime = 30;
-    $this->_statusFilePrefix = '/tmp/cps-api-node-status-';
+    $tmp =  sys_get_temp_dir();
+    if (substr($tmp, strlen($tmp) - 1) !== "/") {
+      $tmp .= "/";
+    };
+    $this->_statusFilePrefix = $tmp . "cps-api-node-status-";
     $this->_sendWhenAllFailed = true;
     $this->_debug = false;
     $this->_non_retry_cmds = array('update', 'delete', 'replace', 'partial-replace', 'partial-xreplace', 'insert', 'create-alert', 'update-alerts', 'delete-alerts',
