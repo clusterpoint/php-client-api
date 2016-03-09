@@ -183,6 +183,7 @@ class CPS_Response
         case 'list-databases':
         case 'create-database':
         case 'edit-database':
+        case 'edit-database-layout':
         case 'rename-database':
         case 'drop-database':
         case 'list-nodes':
