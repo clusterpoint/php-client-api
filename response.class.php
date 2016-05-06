@@ -181,11 +181,16 @@ class CPS_Response
         case 'status':
         case 'list-paths':
         case 'list-databases':
+        case 'list-collections':
         case 'create-database':
+        case 'create-collection':
         case 'edit-database':
+        case 'edit-collection':
         case 'edit-database-layout':
         case 'rename-database':
+        case 'rename-collection':
         case 'drop-database':
+        case 'drop-collection':
         case 'list-nodes':
         case 'list-hubs':
         case 'list-hosts':
@@ -212,6 +217,7 @@ class CPS_Response
           $this->_contentArray = CPS_Response::simpleXmlToArray($cpsContent);
           break;
         case 'describe-database':
+        case 'describe-collection':
           $this->_contentArray = CPS_Response::simpleXmlToArray($cpsContent);
           $rawDataModelXML = substr($responseXml, strpos($responseXml, '<overrides>')+11, (strpos($responseXml, '</overrides>') - strpos($responseXml, '<overrides>') - 11));
           $this->_contentArray['overrides'] = $rawDataModelXML;
