@@ -179,6 +179,9 @@ class CPS_Response
           }
           break;
         case 'status':
+		case 'list-backups':
+		case 'make-backup':
+		case 'restore':
         case 'list-paths':
         case 'list-databases':
         case 'list-collections':
