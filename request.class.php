@@ -176,7 +176,9 @@ class CPS_Request {
         // extra XML content
         if (!is_null($this->_extraXmlParam)) {
             $tmpDoc = new DOMDocument();
-            $tmpDoc->loadXML('<fakedoc xmlns:cps="www.clusterpoint.com">' . $this->_extraXmlParam . '</fakedoc>');
+            if (!@$tmpDoc->loadXML('<fakedoc xmlns:cps="www.clusterpoint.com">' . $this->_extraXmlParam . '</fakedoc>')) {
+                throw new CPS_Exception(array(array('long_message' => 'Invalid request parameter - unable to parse XML', 'code' => ERROR_CODE_INVALID_PARAMETER, 'level' => 'REJECTED', 'source' => 'CPS_API')));
+            }
             foreach ($tmpDoc->documentElement->childNodes as $child) {
                 $domNode2 = $this->_requestDom->importNode($child, true);
                 $contentTag->appendChild($domNode2);
