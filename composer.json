@@ -2,7 +2,7 @@
     "name": "clusterpoint/php-client-api",
     "type": "library",
     "license": "MIT",
-    "version": "3.0.2",
+    "version": "3.0.3",
     "keywords": ["clusterpoint","api"],
     "homepage": "https://www.clusterpoint.com/",
     "require": {
