@@ -415,7 +415,7 @@ class CPS_Connection
         $doc->strictErrorChecking = false;
         $doc->preserveWhiteSpace = false;
         $doc->formatOutput = true;
-        $doc->loadXML($this->_lastRequestQuery);
+        @$doc->loadXML($this->_lastRequestQuery);
         $html = $doc->saveXML();
       } catch (Exception $e) {
         // do nothing

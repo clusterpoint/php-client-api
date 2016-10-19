@@ -413,6 +413,15 @@ class CPS_SearchResponse extends CPS_Response
         return parent::getRawDocuments($type);
     }
 
+	/**
+	 * Returns the raw SimpleXMLElement results from the response
+	 * @return SimpleXMLElement
+	 */
+	public function getRawResults()
+	{
+		return parent::getRawResults();
+	}
+
     /**
      * Returns the facets from the response in a form of a multi-dimensional associative array, e.g. array('category' => array('Sports' => 15, 'News' => 20));
      * @return array

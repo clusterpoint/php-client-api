@@ -125,6 +125,9 @@ class CPS_Response
               $docs = array();
             }
           }
+
+		  $this->_rawResults = $docs;
+
           $curpos = 0;
           foreach ($docs as $rootTag => $doc) {
             if ($rootTag == $idPath[0]) {
@@ -269,6 +272,15 @@ class CPS_Response
       }
     }
   }
+
+	/**
+	 * Returns the raw SimpleXMLElement results from the response
+	 * @return SimpleXMLElement
+	 */
+	public function getRawResults()
+	{
+		return $this->_rawResults;
+	}
 
   /**
    * Returns the documents from the response
@@ -479,6 +491,7 @@ class CPS_Response
   private $_to;
   protected $_errors;
   protected $_documents;
+  protected $_rawResults;
   protected $_facets;
   protected $_textParams;
   protected $_words;
